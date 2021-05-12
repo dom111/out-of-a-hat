@@ -2,25 +2,58 @@ const decodeHash = () => {
         const data = document.location.hash.substr(1),
             decoded = atob(data ?? '');
 
-        if (decoded.match(/^[\x20-\x7e]+$/)) {
-            return decoded;
+        if (!decoded) {
+            return null;
         }
 
-        return null;
+        try {
+            return JSON.parse(decoded);
+        }
+        catch (e) {
+            return null;
+        }
     },
     input = document.querySelector('.input'),
-    inputText = input.querySelector('textarea'),
-    output = document.querySelector('.output');
+    inputTexts = input.querySelectorAll('textarea'),
+    [introText, inputText] = inputTexts,
+    button = input.querySelector('button'),
+    output = document.querySelector('.output'),
+    intro = output.querySelector('.intro'),
+    item = output.querySelector('.item'),
+    showLinks = () => {
+        const intro = introText.value,
+            text = inputText.value,
+            items = text.split(/\n/).map((t) => t.replace(/^\s+|\s+$/g, '')),
+            shuffled = items.sort(() => Math.trunc(Math.random() * 3) - 1),
+            encoded = shuffled.map((item) => btoa(JSON.stringify({ intro, item }))),
+            currentUrl = location.protocol + '//' + location.hostname + location.port + location.pathname;
 
-inputText.addEventListener('change', () => {
-    const text = inputText.value,
-        items = text.split(/\n/).map((t) => t.replace(/^\s+|\s+$/g, '')),
-        shuffled = items.sort(() => Math.trunc(Math.random() * 3) - 1),
-        encoded = shuffled.map((item) => btoa(item)),
-        currentUrl = location.protocol + '//' + location.hostname + location.port + location.pathname;
+        output.innerHTML = '';
 
-    output.innerHTML = encoded.map((item) => currentUrl + '#' + item).join('<br/>');
-});
+        encoded.forEach((item, i) => {
+            const link = document.createElement('a');
+
+            link.href = currentUrl + '#' + item;
+            link.innerText = 'Item ' + (i + 1);
+
+            link.addEventListener('click', (event) => {
+                event.preventDefault();
+
+                if (navigator.share) {
+                    navigator.share({
+                        url: link.href
+                    })
+                        .then(() => link.classList.add('done'));
+                }
+                else {
+                    alert(`You'll need to long press on this link and copy the link to share manually...`);
+                }
+            });
+
+            output.append(link);
+            output.append(document.createElement('br'));
+        });
+    };
 
 window.addEventListener('load', () => {
     const decodedData = decodeHash();
@@ -31,8 +64,10 @@ window.addEventListener('load', () => {
         return;
     }
 
-    output.innerHTML = decodedData;
-    document.title = decodedData + ' - Pull x out of a hat';
+    intro.innerText = decodedData.intro ?? '';
+    item.innerText = decodedData.item;
+
+    document.title = decodedData.item + ' - Pull x out of a hat';
 });
 
-window.addEventListener('hashchange', (a, b, c) => console.log(a, b, c));
+button.addEventListener('focus', showLinks);

@@ -4,16 +4,44 @@ html {
 
 body {
     background: #9be;
+    font-size: 1.5em;
     margin: 0 auto;
     max-width: 30em;
+    padding: 1em;
     text-align: center;
-}
-
-.output {
-    font-family: monospace;
-    font-size: 1.5em;
 }
 
 .input {
     display: none;
+}
+
+.input textarea {
+    min-height: 10em;
+    width: 30em;
+}
+
+.input button {
+    border-radius: 1em;
+    padding: .5em;
+}
+
+.output {
+    font-family: monospace;
+    padding: 1em;
+}
+
+.output p.intro:empty {
+    display: none;
+}
+
+.output a.done {
+    color: #888;
+    text-decoration: none;
+}
+
+.output a.done:after {
+    color: #393;
+    content: ' \2713';
+    font-weight: bold;
+    text-shadow: 1px 1px rgba(0, 0, 0, .3);
 }
