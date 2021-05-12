@@ -1,0 +1,19 @@
+html {
+    text-align: center;
+}
+
+body {
+    background: #9be;
+    margin: 0 auto;
+    max-width: 30em;
+    text-align: center;
+}
+
+.output {
+    font-family: monospace;
+    font-size: 1.5em;
+}
+
+.input {
+    display: none;
+}
