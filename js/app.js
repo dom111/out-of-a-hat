@@ -1,3 +1,6 @@
+import ItemInput from './ItemInput';
+import ItemList from './ItemList';
+
 const decodeHash = () => {
         const data = document.location.hash.substr(1),
             decoded = atob(data ?? '');
@@ -24,7 +27,7 @@ const decodeHash = () => {
         const intro = introText.value,
             text = inputText.value,
             items = text.split(/\n/).map((t) => t.replace(/^\s+|\s+$/g, '')),
-            shuffled = items.sort(() => Math.trunc(Math.random() * 3) - 1),
+            shuffled = shuffle(items),
             encoded = shuffled.map((item) => btoa(JSON.stringify({ intro, item }))),
             currentUrl = location.protocol + '//' + location.hostname + location.port + location.pathname;
 
@@ -53,6 +56,15 @@ const decodeHash = () => {
             output.append(link);
             output.append(document.createElement('br'));
         });
+    },
+    shuffle = (array) => {
+        const shuffled = [];
+
+        while (array.length) {
+            shuffled.push(...array.splice(Math.trunc(Math.random() * array.length), 1));
+        }
+
+        return shuffled;
     };
 
 window.addEventListener('load', () => {
@@ -70,4 +82,10 @@ window.addEventListener('load', () => {
     document.title = decodedData.item + ' - Pull x out of a hat';
 });
 
-button.addEventListener('focus', showLinks);
+button.addEventListener('click', showLinks);
+
+const itemList = new ItemList();
+
+introText.parentElement.insertBefore(itemList.element(), introText.parentElement.nextSibling);
+
+new ItemInput(inputText, itemList);
