@@ -1,9 +1,10 @@
 html {
+    background: #9be;
     text-align: center;
 }
 
 body {
-    /*background: #9be;*/
+    font-family: sans-serif;
     font-size: 1.5em;
     margin: 0 auto;
     max-width: 30em;
@@ -16,18 +17,27 @@ body {
 }
 
 .input textarea {
-    min-height: 10em;
-    width: 30em;
+    min-height: 2em;
+    width: 100%;
 }
 
 .input button {
     border-radius: 1em;
     padding: .5em;
+    margin-left: .5em;
+}
+
+.input .itemList button:after {
+    content: '\2715';
 }
 
 .output {
-    font-family: monospace;
     padding: 1em;
+}
+
+.output p.intro,
+.outout p.item {
+    white-space: pre;
 }
 
 .output p.intro:empty {

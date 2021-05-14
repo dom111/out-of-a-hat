@@ -21,7 +21,9 @@ export class Item {
 
         label.innerText = this.#name;
 
-        remove.addEventListener('click', (event) => this.#itemList.remove(this));
+        remove.classList.add('btn', 'btn-danger');
+
+        remove.addEventListener('click', () => this.#itemList.remove(this));
 
         this.#element.append(label, remove);
     }

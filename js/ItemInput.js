@@ -1,4 +1,4 @@
-import Item from './Item';
+import Item from './Item.js';
 
 export class ItemInput {
     /** @property {HTMLTextAreaElement} */
@@ -19,16 +19,23 @@ export class ItemInput {
     }
 
     bindEvents() {
-        this.#element.addEventListener('keyup', this.convertToListItems);
-        this.#element.addEventListener('paste', this.convertToListItems);
+        this.#element.addEventListener('keydown', (event) => {
+            if (event.key !== 'Enter') {
+                return;
+            }
+
+            event.preventDefault();
+
+            this.convertToListItems();
+        });
     }
 
     convertToListItems() {
-        const items = this.#element.value.trim()
+        const items = this.#element.value
             .split(/\n/)
             .map((item) => item.trim());
 
-        while (items.length > 1) {
+        while (items.length > 0) {
             const item = items.shift()
                 .trim();
 
@@ -41,6 +48,8 @@ export class ItemInput {
                 console.error(`Couldn't add item '${item}', it probably already exists in the collection.`);
             }
         }
+
+        this.#element.value = items.join('\'n');
     }
 }
 

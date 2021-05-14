@@ -5,9 +5,18 @@
 
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
         <link rel="stylesheet" href="css/app.css">
     </head>
     <body>
+        <div class="p-5 mb-4 bg-light rounded-3">
+            <div class="container-fluid py-5">
+                <h1 class="display-5 fw-bold">Out of a hat</h1>
+                <p class="col-md-8 fs-4">Anonymously give out items to your friends, no data is stored on the server, just shareable links for your friends.</p>
+                <p class="col-md-8 fs-4">Best used on mobile, add the items you want your shareable links for (and an optional bit of intro text) and click on the generated links to open a native share window to send via your preferred method. Each link is ticked once the share has been successful so you (Hopefully!) won't send any links twice!</p>
+            </div>
+        </div>
+
         <div class="input">
             <div>
                 <textarea placeholder="An optional paragraph shown to everyone following the links"></textarea>
@@ -16,9 +25,7 @@
                 <textarea placeholder="Enter the items you want URLs for..."></textarea>
             </div>
             <div>
-                <button>
-                    Click here when done
-                </button>
+                <button class="btn btn-primary">Generate Shareable Links</button>
             </div>
         </div>
 
@@ -26,6 +33,8 @@
             <p class="intro"></p>
             <p class="item"></p>
         </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
         <script src="js/app.js" type="module"></script>
     </body>
 </html>

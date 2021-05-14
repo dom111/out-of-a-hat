@@ -1,5 +1,5 @@
-import ItemInput from './ItemInput';
-import ItemList from './ItemList';
+import ItemInput from './ItemInput.js';
+import ItemList from './ItemList.js';
 
 const decodeHash = () => {
         const data = document.location.hash.substr(1),
@@ -23,15 +23,20 @@ const decodeHash = () => {
     output = document.querySelector('.output'),
     intro = output.querySelector('.intro'),
     item = output.querySelector('.item'),
-    showLinks = () => {
+
+    /**
+     * @param itemList {ItemList}
+     */
+    showLinks = (itemList) => {
         const intro = introText.value,
-            text = inputText.value,
-            items = text.split(/\n/).map((t) => t.replace(/^\s+|\s+$/g, '')),
+            items = itemList.children().map((item) => item.name()),
             shuffled = shuffle(items),
             encoded = shuffled.map((item) => btoa(JSON.stringify({ intro, item }))),
             currentUrl = location.protocol + '//' + location.hostname + location.port + location.pathname;
 
-        output.innerHTML = '';
+        while (output.hasChildNodes()) {
+            output.firstChild.remove();
+        }
 
         encoded.forEach((item, i) => {
             const link = document.createElement('a');
@@ -49,6 +54,7 @@ const decodeHash = () => {
                         .then(() => link.classList.add('done'));
                 }
                 else {
+                    // TODO: toast
                     alert(`You'll need to long press on this link and copy the link to share manually...`);
                 }
             });
@@ -67,6 +73,19 @@ const decodeHash = () => {
         return shuffled;
     };
 
+introText.addEventListener('input', ({ target }) => {
+    target.style.height = '0px';
+
+    const minHeight = 30,
+        maxHeight = 160,
+        { paddingTop, paddingBottom } = window.getComputedStyle(target),
+        targetHeight = target.scrollHeight -
+            (parseInt(paddingTop, 10) || 0) -
+            (parseInt(paddingBottom, 10) || 0);
+
+    target.style.height = Math.max(Math.min(targetHeight, maxHeight), minHeight) + 'px';
+})
+
 window.addEventListener('load', () => {
     const decodedData = decodeHash();
 
@@ -78,14 +97,16 @@ window.addEventListener('load', () => {
 
     intro.innerText = decodedData.intro ?? '';
     item.innerText = decodedData.item;
-
     document.title = decodedData.item + ' - Pull x out of a hat';
 });
 
-button.addEventListener('click', showLinks);
+const itemList = new ItemList(),
+    itemInput = new ItemInput(inputText, itemList);
 
-const itemList = new ItemList();
+introText.parentElement.parentElement.insertBefore(itemList.element(), introText.parentElement.nextSibling);
 
-introText.parentElement.insertBefore(itemList.element(), introText.parentElement.nextSibling);
+button.addEventListener('click', () => {
+    itemInput.convertToListItems();
 
-new ItemInput(inputText, itemList);
+    showLinks(itemList);
+});

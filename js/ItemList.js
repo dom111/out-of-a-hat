@@ -17,11 +17,17 @@ export class ItemList {
             return false;
         }
 
-        this.element.append(item.element());
-
+        this.#element.append(item.element());
         this.#children.push(item);
 
         return true;
+    }
+
+    /**
+     * @returns {Item[]}
+     */
+    children() {
+        return this.#children;
     }
 
     /** @returns {HTMLUListElement} */
